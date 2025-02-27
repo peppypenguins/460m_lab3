@@ -6,7 +6,7 @@ module step_cntr(pulse,reset,steps
     input reset;
     output reg[31:0] steps;
     
-    always @(posedge pulse or reset) begin
+    always @(posedge pulse or posedge reset) begin
         if (reset == 1'b1)
             steps <= 32'b0000;
         else begin

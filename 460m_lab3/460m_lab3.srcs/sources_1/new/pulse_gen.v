@@ -6,12 +6,12 @@ module pulse_gen(clk100Mhz, mode, reset, start, pulse_out
     input[1:0] mode;
     input reset;
     input start;
-    output reg pulse_out;
+    output pulse_out;
     
     reg[31:0] set_speed = 8'b11111111;
-    reg sec_clk;
+    wire sec_clk;
     
-    integer i = 0;
+    reg[7:0] i = 0;
     reg [31:0] time_array [0:12];
     
     initial begin
@@ -33,7 +33,7 @@ module pulse_gen(clk100Mhz, mode, reset, start, pulse_out
     var_clk_div clk_gen(.clk100Mhz(clk100Mhz), .set_speed(set_speed), .slowClk(pulse_out));
     var_clk_div sec_gen(.clk100Mhz(clk100Mhz), .set_speed(32'b0101111101011110000100000000), .slowClk(sec_clk));
     
-    always @(mode or reset or posedge sec_clk) begin
+    always @(posedge sec_clk) begin
         if (reset == 1'b1) begin
             i <= 0;
         end else if (start == 1'b1) begin
@@ -66,7 +66,6 @@ module pulse_gen(clk100Mhz, mode, reset, start, pulse_out
                 set_speed <= time_array[12];
                 i <= 150;
             end   
-            default:;
        endcase;
        end else begin
             set_speed <= 32'b0101111101011110000100000000;

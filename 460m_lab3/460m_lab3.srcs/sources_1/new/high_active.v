@@ -8,14 +8,14 @@ module high_active(clk100Mhz, steps, reset, active_time
     input reset;
     output reg[15:0] active_time;
     
-    reg sec_clk; 
-    integer sec_cntr = 0;  
+    wire sec_clk; 
+    reg[7:0] sec_cntr = 0;  
     reg prev_reset;
     reg prev_steps;
     
     var_clk_div sec_gen(.clk100Mhz(clk100Mhz), .set_speed(32'b0101111101011110000100000000), .slowClk(sec_clk));
     
-    always @(posedge sec_clk or reset) begin
+    always @(posedge sec_clk) begin
         if (reset == 1'b1) begin
             active_time <= 0;
             sec_cntr <= 0;

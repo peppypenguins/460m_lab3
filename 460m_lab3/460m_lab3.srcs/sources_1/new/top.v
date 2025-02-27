@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 
 module top(clk, mode, reset, start,
-           SI, out3, out2, out1, out0
+           SI, an, sseg
     );
     
     input clk;
@@ -9,14 +9,27 @@ module top(clk, mode, reset, start,
     input reset;
     input start;
     output SI;
-    output[6:0] out3;
-    output[6:0] out2;
-    output[6:0] out1;
-    output[6:0] out0;
+    output [3:0] an;
+    output [7:0] sseg;
     
-    reg pulse;
+    wire pulse;
+    wire fsm_clk;
+    wire [6:0] in0, in1, in2, in3;
     
     pulse_gen my_pulse(.clk100Mhz(clk), .mode(mode), .reset(reset), .start(start), .pulse_out(pulse));
-    handler top_handler(.clk100Mhz(clk), .pulse(pulse), .reset(reset), .out0(out0), .out1(out1),
-                        .out2(out2), .out3(out3), .SI(SI));        
+    clk_div_fsm fsm_clk_gen(.clk(clk), .reset(reset), .out_clk(fsm_clk));
+    
+    handler top_handler(.clk100Mhz(clk), .pulse(pulse), .reset(reset), .out0(in0), .out1(in1),
+                        .out2(in2), .out3(in3), .SI(SI));    
+                        
+    time_mux_state_machine c2 ( // display sseg outputs on fpga board
+    .clk(fsm_clk),
+    .reset(reset),
+    .in0(in0),
+    .in1(in1),
+    .in2(in2),
+    .in3(in3),
+    .an(an),
+    .sseg(sseg)
+    );  
 endmodule

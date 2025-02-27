@@ -3,7 +3,7 @@
 module handler(clk100Mhz, pulse, reset, out0, out1, out2, out3, SI
     );
     input clk100Mhz;
-    input[31:0] pulse;
+    input pulse;
     input reset;
     output reg[6:0] out0;
     output reg[6:0] out1;
@@ -19,10 +19,10 @@ module handler(clk100Mhz, pulse, reset, out0, out1, out2, out3, SI
     wire[3:0] D1_steps;
     wire[3:0] D0_steps;
     
-    reg[6:0] D3_steps_seg;
-    reg[6:0] D2_steps_seg;
-    reg[6:0] D1_steps_seg;
-    reg[6:0] D0_steps_seg;
+    wire[6:0] D3_steps_seg;
+    wire[6:0] D2_steps_seg;
+    wire[6:0] D1_steps_seg;
+    wire[6:0] D0_steps_seg;
     
     
     wire[3:0] D3_dist;
@@ -30,10 +30,10 @@ module handler(clk100Mhz, pulse, reset, out0, out1, out2, out3, SI
     wire[3:0] D1_dist = 4'b1111;
     wire[3:0] D0_dist;
     
-    reg[6:0] D3_dist_seg;
-    reg[6:0] D2_dist_seg;
-    reg[6:0] D1_dist_seg;
-    reg[6:0] D0_dist_seg;
+    wire[6:0] D3_dist_seg;
+    wire[6:0] D2_dist_seg;
+    wire[6:0] D1_dist_seg;
+    wire[6:0] D0_dist_seg;
       
     
     wire[3:0] D3_cnt32 = 4'b0000;
@@ -41,27 +41,27 @@ module handler(clk100Mhz, pulse, reset, out0, out1, out2, out3, SI
     wire[3:0] D1_cnt32 = 4'b0000;
     wire[3:0] D0_cnt32;
     
-    reg[6:0] D3_cnt32_seg;
-    reg[6:0] D2_cnt32_seg;
-    reg[6:0] D1_cnt32_seg;
-    reg[6:0] D0_cnt32_seg;
+    wire[6:0] D3_cnt32_seg;
+    wire[6:0] D2_cnt32_seg;
+    wire[6:0] D1_cnt32_seg;
+    wire[6:0] D0_cnt32_seg;
     
     wire[3:0] D3_high_active;
     wire[3:0] D2_high_active;
     wire[3:0] D1_high_active;
     wire[3:0] D0_high_active;
     
-    reg[6:0] D3_active_seg;
-    reg[6:0] D2_active_seg;
-    reg[6:0] D1_active_seg;
-    reg[6:0] D0_active_seg;
+    wire[6:0] D3_active_seg;
+    wire[6:0] D2_active_seg;
+    wire[6:0] D1_active_seg;
+    wire[6:0] D0_active_seg;
     
-    reg two_sec_clk; 
-    reg[31:0] out_steps;
-    reg[7:0] dist_int;
-    reg dist_frac;
-    reg[3:0] num_over;
-    reg[15:0] active_time;
+    wire two_sec_clk; 
+    wire[31:0] out_steps;
+    wire[7:0] dist_int;
+    wire dist_frac;
+    wire[3:0] num_over;
+    wire[15:0] active_time;
     
     var_clk_div sec_gen(.clk100Mhz(clk100Mhz), .set_speed(32'b0010111110101111000010000000), .slowClk(two_sec_clk)); 
     step_cntr find_steps(.pulse(pulse), .reset(reset), .steps(out_steps));
@@ -110,7 +110,7 @@ module handler(clk100Mhz, pulse, reset, out0, out1, out2, out3, SI
     assign D0_high_active = active_time % 10;
       
     
-    always @(posedge two_sec_clk or reset) begin
+    always @(posedge two_sec_clk or posedge reset) begin
         if (reset == 1'b1) begin
             state <= 2'b00;
             next_state <= 2'b00;
@@ -140,7 +140,6 @@ module handler(clk100Mhz, pulse, reset, out0, out1, out2, out3, SI
                 out1 <= D1_active_seg;
                 out0 <= D0_active_seg;            
             end
-            default:;
             endcase;    
         end
         state <= next_state;
