@@ -71,6 +71,8 @@ proc create_report { reportName command } {
 }
 OPTRACE "synth_1" START { ROLLUP_AUTO }
 set_param chipscope.maxJobs 3
+set_param xicom.use_bs_reader 1
+set_msg_config -id {Common 17-41} -limit 10000000
 OPTRACE "Creating in-memory project" START { }
 create_project -in_memory -part xc7a35ticpg236-1L
 
@@ -95,6 +97,7 @@ read_verilog -library xil_defaultlib {
   C:/Users/adamk/460m_lab3/460m_lab3.srcs/sources_1/new/pulse_gen.v
   C:/Users/adamk/460m_lab3/460m_lab3.srcs/sources_1/new/step_cntr.v
   C:/Users/adamk/460m_lab3/460m_lab3.srcs/sources_1/new/time_mux_state_machine.v
+  C:/Users/adamk/460m_lab3/460m_lab3.srcs/sources_1/new/two_sec_clk.v
   C:/Users/adamk/460m_lab3/460m_lab3.srcs/sources_1/new/var_clk_div.v
   C:/Users/adamk/460m_lab3/460m_lab3.srcs/sources_1/new/top.v
 }

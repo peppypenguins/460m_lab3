@@ -8,7 +8,7 @@ input [6:0] in1,
 input [6:0] in2,
 input [6:0] in3,
 output reg [3:0] an,
-output reg [7:0] sseg
+output reg [6:0] sseg
     );
     
     reg [1:0] state = 2'b0;
@@ -25,10 +25,10 @@ output reg [7:0] sseg
     
     always @(*) begin // decides what number will be lit up on display
     case (state)
-    2'b00 : sseg = in0 | 8'b10000000;
-    2'b01 : sseg = in1 | 8'b10000000;
-    2'b10 : sseg = in2 & 8'b01111111;
-    2'b11 : sseg = in3 | 8'b10000000;
+    2'b00 : sseg = in0 | 7'b0000000;
+    2'b01 : sseg = in1 | 7'b0000000;
+    2'b10 : sseg = in2 & 7'b1111111;
+    2'b11 : sseg = in3 | 7'b0000000;
     
     endcase
     case (state) // decides which digit is being updated

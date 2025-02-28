@@ -63,7 +63,9 @@ module handler(clk100Mhz, pulse, reset, out0, out1, out2, out3, SI
     wire[3:0] num_over;
     wire[15:0] active_time;
     
-    var_clk_div sec_gen(.clk100Mhz(clk100Mhz), .set_speed(32'b0010111110101111000010000000), .slowClk(two_sec_clk)); 
+    //var_clk_div sec_gen(.clk100Mhz(clk100Mhz), .set_speed(32'b0010111110101111000010000000), .slowClk(two_sec_clk), .active(1));
+    
+    two_sec_clk sec_gen(.clk100Mhz(clk100Mhz), .out_clock(two_sec_clk));     
     step_cntr find_steps(.pulse(pulse), .reset(reset), .steps(out_steps));
     distance_cntr find_dist(.steps(out_steps), .dist_int(dist_int), .dist_frac(dist_frac));
     cnt_32 num_over_32(.clk100Mhz(clk100Mhz), .steps(out_steps), .reset(reset), .num_over(num_over));

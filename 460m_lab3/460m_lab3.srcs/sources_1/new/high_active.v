@@ -8,20 +8,23 @@ module high_active(clk100Mhz, steps, reset, active_time
     input reset;
     output reg[15:0] active_time;
     
+    initial begin
+        active_time = 16'b0;
+    end
+    
     wire sec_clk; 
     reg[7:0] sec_cntr = 0;  
-    reg prev_reset;
-    reg prev_steps;
+    reg[31:0] prev_steps;
     
-    var_clk_div sec_gen(.clk100Mhz(clk100Mhz), .set_speed(32'b0101111101011110000100000000), .slowClk(sec_clk));
+    
+    var_clk_div sec_gen(.clk100Mhz(clk100Mhz), .set_speed(52000000), .slowClk(sec_clk), .active(1));
     
     always @(posedge sec_clk) begin
         if (reset == 1'b1) begin
             active_time <= 0;
             sec_cntr <= 0;
             end
-        else if (prev_reset == reset) begin
-            if (steps - prev_steps > 63) begin
+            if (steps > prev_steps && steps - prev_steps > 63) begin
                 if (sec_cntr == 59)
                     active_time <= active_time + 60;
                 else if (sec_cntr > 59)
@@ -30,10 +33,7 @@ module high_active(clk100Mhz, steps, reset, active_time
             end else begin
                 sec_cntr <= 0;
             end
-        end
-        prev_reset <= reset;
         prev_steps <= steps;
     end
-    
-    
+     
 endmodule
